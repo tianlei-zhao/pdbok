@@ -1,0 +1,388 @@
+#+TITLE: Processor Design Body of Knowledge
+#+OPTIONS: f:t toc:2
+
+所谓“知识体系”，是指相互连接构成网状结构的一系列知识点。我们可以从不同的角度去透
+视这个网状结构，不同的角度对应于知识点的不同归类方法。知识体系的网状拓扑是一个高
+维的有序结构。通常我们对这个结构只有部分的认识，只识别了其中的部分结点和部分维度。
+我们的目标，是努力的探索这个结构，通过识别更多的结点，发现该结构中存在的维度，然
+后沿着这些维度推广，再发现更多的结点，最终获得对该结构的更深认识。
+
+#+BEGIN_EXAMPLE
+这里有一个更深的问题，即维度是什么，怎么定义的？或者说怎么描述一个问题的结构？有
+没有通用的方法？比如 relation 的三个维度：自反性、对称性、传递性。另外一个例子是
+unified memory consistency model theory 中的 GPO/GAO/GWO/GDO。几何中的维度是怎么
+定义的，怎么发现的？分形中的维度是怎么发现的？
+#+END_EXAMPLE
+
+Processor design 的知识体系可以有如下透视视角：
+- 按知识类型 :: 体系结构 - 微体系结构 - 逻辑设计
+- 按设计目标 :: 功能验证 - 性能优化 - 时序优化 - 功耗优化 - 面积优化
+- 按岗位职责 :: 架构师 - 微架构师 - 逻辑设计师
+- 按项目流程 :: 规格定义 - 高层设计 - 低层设计 - 逻辑设计 - 功能验证 - 物理设计
+  
+注意：系统本身是整体的，不同的分类方法只是我们自己的杜撰，不要拘泥于分类。
+
+Processor design 知识体系的主要目标：
+- 提供一个知识地图，可以帮助大家认识到自己的现有知识范围，明确下一步学习方向
+- 加深认识，在梳理总结的过程中提炼出知识体系的维度，促进创新性想法的产生
+
+* 按知识类型
+** 应用需求
+*** 技术指标
+- Gain :: Performance
+- Cost :: Power, dollar, board area, Internet bandwidth, (down) time
+
+
+- PDP: Power-delay product (performance per watt, power efficiency, energy-per-task)
+- EDP: Energy-delay product (performance per sqrt(watt))
+- Performance per dollar
+- Performance per mm2
+- Performance per Gbps
+- MTBF
+
+*** 应用领域
+- HPC :: Performance, performance per watt, MTBF
+- Server :: EDP, performance per Gbps, MTBF
+- Desktop :: performance
+- Mobile :: Energy-per-task
+- Industry :: 
+- ...
+
+** 体系结构
+*** User ISA
+*** Vector Extension
+*** Exception Model
+*** Virtual Memory
+- Page table
+  - Linear
+  - Radix tree
+  - Hash table
+- TLB (coherence)
+- Virtual Cache
+- ...
+
+*** Virtualization
+**** CPU virtualization
+**** Memory virtualization
+**** Interrupt virtualization
+**** Device virtualization (IOMMU)
+
+*** Memory Model
+**** Cache Coherence
+- CPU cache coherence
+- DMA coherence
+- Insn-data-ptw coherence
+- ...
+
+**** Memory Consistency
+**** Atomic operations
+- Exclusive monitor
+- Atomic instructions
+- ...
+
+*** Debug/Trace
+**** Self-hosted debug
+**** External debug
+**** Trace?
+*** Interrupt Controller
+- Interrupt dispatch model
+- Interrupt state machine
+- Interrupt Virtualization
+- Virt. Acceleration
+- Security Extension
+- ...
+
+*** Interconnect
+**** Link/Network Layer
+- Topology
+- Routing
+- Flow control
+- Deadlock
+- ...
+
+**** Protocol Layer
+- Virtual channel
+- Transaction flow
+- Transaction Order
+- Deadlock
+- Cache coherence
+- ...
+
+**** AXI
+
+**** CHI
+**** PCI Express
+***** Physical Layer
+***** Data Link Layer
+- Flow control
+- Reliability
+- ...
+
+***** Transaction Layer
+- Topology
+- Programmer's model
+- Ordering/Deadlock
+- Virtual Channel
+- ACS/ARI/PASID/Atomic...
+- ...
+
+***** Power Management
+
+***** Application Layer
+- IOV
+- ATS
+- ...
+
+**** CCIX
+** 微体系结构
+*** Branch Prediction
+- Decoupled branch predictor
+- Branch prediction algorithm
+  - Gshare
+  - Bimode
+  - TAGE
+  - Neuron network
+- ...
+
+*** Insn Fusion
+- Micro op fusion
+- Macro op fusion
+- ...
+
+*** Insn Grouping
+*** Uop Cracking
+*** Register Renaming
+- CAM vs. RAM
+- Checkpointing
+- Rename buffer
+- Physical register file
+- Future file
+- ...
+
+*** Insn Scheduling
+**** Tomasulo algorithm
+**** Dependency matrix
+
+*** Cache Hierarchy
+- Cache access pipeline
+- Memory ordering
+- Corner case
+- ...
+
+*** Insn Scoreboard
+
+*** Timing design
+- Pipeline stage balance
+- Input/output delay spec
+- Floorplan draft
+- Clock skew
+- Source synchronous clock
+- Pre-calculate (predecode, read data one-cycle earlier)
+- ...
+
+** 逻辑设计
+*** Clock
+- Clock skew
+- Setup/Hold
+- Timing analysis
+- ...
+
+*** Reset
+- Synchronous
+- Asynchronous
+- Reset distribution tree
+- High fanout resolution
+- RDC
+- ...
+
+*** CDC
+- Metastability
+- MTBF
+- Reconvergence
+- ...
+
+*** FIFO
+- 
+
+*** Queue
+- 
+
+*** Flow Control
+-
+
+*** Arbiter
+-
+
+*** FSM
+
+*** X-prop
+*** Assertion
+*** SDC
+
+*** Timing optimization
+- STA
+- FO4
+- High fanout
+- DFF duplication
+- Logic duplication
+- Critical signal
+
+- Optimized logic structure
+  - Casade mux
+  - Butterfly switch (queue compaction)
+
+- Inexact control signal
+  - False positive: sram EN, hazard, ...
+  - False positive/negative: CG signal
+  - False negative: ??
+
+- Balanced logic cone (优化树的高度)
+- Add a pre/post interface reg for buffer/queue
+
+*** Power optimization
+- Critical (high-toggle) signal 往后放
+- Fine grain clock gating (一个信号拆开门控)
+- Low power caching structures
+
+* 按设计目标
+** 性能优化
+*** 体系结构级
+- Less instruction: Offload / Hardware Acceleration
+  - Vector extension
+  - Virtualization
+  - CRC/Crypto
+
+- Less operation
+  - Exclusive monitor
+
+- Less synchronization
+  - Insn/data coherence
+
+- ...
+  
+*** 微体系结构级
+- Better base performance
+  - Algorithms
+    - Branch prediction
+    - Register Renaming
+    - Instruction scheduling
+    - Synchronization policy
+    - Memory access reordering policy
+    - Data prefetcher
+
+  - Key parameters
+    - Branch predictor structure size
+    - Fetch width
+    - Decode width
+    - Rename width
+      - ROB/PRF depth
+    - Dispatch width
+    - Issq depth
+    - Issue ports
+    - # of function units
+    - # of result buses
+    - Cache size
+    - TLB size
+    - LSQ, STB, MB size
+    - Load/store bandwidth
+    - # of outstanding cache misses
+    - Insn latency
+    - Commit width
+
+  - Improve utilization
+    - Branch misprediction latency
+    - Less flush
+      - Miss (various) speculation
+      - ISB
+
+- Less total instructions
+  - Instruction fusion
+  - Move elimination
+  - Early insn drop
+  - Dynamic elimination of some operations
+    - DSB/DMB
+    - FPCR write
+
+- Less useless (false speculation) operations
+  - More accurate branch predictor
+  - Load hit predictor
+  - Store wait predictor
+
+- ...
+
+*** 逻辑设计级
+- SRAM 访问端口数量
+- Data forward path
+- Queue 资源分配及释放时机
+- ...
+
+** 时序优化
+*** 体系结构级
+*** 微体系结构级
+*** 逻辑设计级
+*** 物理设计级
+
+** 功耗优化
+*** 体系结构级
+- 号称 ARMv8 memory model 对功耗友好？
+
+*** 微体系结构级
+*** 逻辑设计级
+*** 物理设计级
+
+** 面积优化
+
+* 设计方法学
+即设计流程，阐述整个项目开发周期应该分成哪些阶段，每个阶段的目标是什么，输出是什
+么，应该开展哪些工作，如何开展。
+
+** 规格定义
+定义芯片的外部规格，包括：
+- 市场定位，应用领域
+- 遵循的指令集及协议规范版本
+- 各外部指标：性能、频率、功耗、面积
+
+** 高层次设计
+定义芯片的微体系结构，包括：
+- In-order or out-of-order pipeline
+- 由哪些大模块构成
+- 每个大模块的详细功能 spec
+- 每个大模块的关键参数：PPA、cache size、width ...
+- 每个大模块的接口信号及协议
+
+- 系统顶层功能列表，及每个功能是如何由各个模块配合实现的
+  - User level ISA
+  - System level ISA
+  - Debug/Trace/PMU
+  - Clock/Reset/Power Management
+  - Bus interface protocol (cache coherence)
+
+- 除了 function design 外，还穿插 timing design 和 low power design
+
+** 低层次设计
+定义一个大模块的微体系结构，包括：
+- 由哪些子模块构成
+- 每个子模块的详细功能 spec
+- 每个子模块的接口信号及协议
+
+- 模块的各功能是如何由各个子模块配合实现的
+
+- 除了 function design 外，还穿插 timing design 和 low power design
+
+** 逻辑设计
+- 子模块设计 (功能到结构的映射)，结构指 buffer/fifo、FSM、mux, arbiter 等
+- 编码、代码检查
+- 简单功能验证
+
+** 功能验证
+- 如何触发 bug
+  - 全面的触发
+    - 如何保证全面？
+  - 有效率的触发
+    - 灰盒
+
+- 如何检测到 bug 导致的异常
+  - 检查层次
+
+** 物理设计
+
